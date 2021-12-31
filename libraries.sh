@@ -47,22 +47,36 @@ function create_row(){
 	num_set=($(seq 1 9))
 	pos_set=($(seq 1 9))
 
-	until [[ ${#pos_set[@]} == 0 ]]
-	do
-		num=${num_set[$RANDOM % ${#num_set[@]}]}
-		pos=${pos_set[$RANDOM % ${#pos_set[@]}]}
+	if [[ $row == 9 ]]
+	then
+		for ((icol=1;icol<10;icol++))
+		do
+			num_set=($(seq 1 9))
+			for ((irow=1;irow<$row;irow++))
+			do
+				num_set=( ${num_set[@]/${matrix[$irow$icol]}} )
+			done
+		matrix[$row$icol]=${num_set[0]}
+		echo "[$scope]Chose ${num_set[0]} for position $icol" >> log.txt
+		done
+	else
+		until [[ ${#pos_set[@]} == 0 ]]
+		do
+			num=${num_set[$RANDOM % ${#num_set[@]}]}
+			pos=${pos_set[$RANDOM % ${#pos_set[@]}]}
 
-		echo "[$scope]Chose $num for position $pos" >> log.txt
-		matrix[$row$pos]=$num
+			echo "[$scope]Chose $num for position $pos" >> log.txt
+			matrix[$row$pos]=$num
 
-		num_set=(${num_set[@]/$num})
-		echo "[$scope]Removed $num from num_set[${num_set[@]}]" >>log.txt
-		echo "[$scope]Remaining num_set : ${#num_set[@]}" >>log.txt
+			num_set=(${num_set[@]/$num})
+			echo "[$scope]Removed $num from num_set[${num_set[@]}]" >>log.txt
+			echo "[$scope]Remaining num_set : ${#num_set[@]}" >>log.txt
 
-		pos_set=(${pos_set[@]/$pos})
-		echo "[$scope]Removed $pos from pos_set[${pos_set[@]}]" >>log.txt
-		echo "[$scope]Remaining pos_set : ${#pos_set[@]}" >>log.txt
-	done
+			pos_set=(${pos_set[@]/$pos})
+			echo "[$scope]Removed $pos from pos_set[${pos_set[@]}]" >>log.txt
+			echo "[$scope]Remaining pos_set : ${#pos_set[@]}" >>log.txt
+		done
+	fi
 	print_matrix
 }
 
