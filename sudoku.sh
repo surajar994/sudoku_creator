@@ -21,15 +21,13 @@ do
 	if [[ $? == 100 ]]
 	then
 		echo "Rewrite row $new_row" >> log.txt
-		echo "Retry for Row$new_row"
 		((new_row--))
 		break
 	fi
 
 	wrng_num=( $(find_wrong_num $new_row) )
-	[[ ${#wrng_num} == 0 ]] && echo "Row$new_row created"
 done
 done
 
 echo "Total Loops:$counter"
-print_matrix 0
+print_matrix 0 >> sudoku.txt
